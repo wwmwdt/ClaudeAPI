@@ -3,7 +3,10 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import httpx
 
-app = FastAPI(title="Claude API Wrapper")
+APP_NAME = "Claude API Wrapper"
+APP_VERSION = "1.0.0"
+
+app = FastAPI(title=APP_NAME, version=APP_VERSION)
 
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY")
 ANTHROPIC_URL = "https://api.anthropic.com/v1/messages"
@@ -16,6 +19,11 @@ class PromptRequest(BaseModel):
 
 class PromptResponse(BaseModel):
     response: str
+
+
+@app.get("/")
+def root():
+    return {"app": APP_NAME, "version": APP_VERSION}
 
 
 @app.get("/health")
