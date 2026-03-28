@@ -1,0 +1,31 @@
+# This workflow deploys to Railway on every push to main.
+# If you use Render instead, you won't need this file at all -
+# Render auto-deploys from GitHub with zero config.
+
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Optional: run a quick smoke test before deploying
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - run: python -c "from app import app; print('Import OK')"
+
+      # Railway deployment (requires RAILWAY_TOKEN secret in GitHub)
+      # Uncomment below if using Railway CLI deploy:
+      # - name: Install Railway CLI
+      #   run: npm install -g @railway/cli
+      # - name: Deploy
+      #   run: railway up
+      #   env:
+      #     RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
